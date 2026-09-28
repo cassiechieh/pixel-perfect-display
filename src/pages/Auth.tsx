@@ -1,28 +1,20 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useDocumentMeta } from "@/hooks/use-document-meta";
 
-export const Route = createFileRoute("/auth")({
-  head: () => ({
-    meta: [
-      { title: "Sign in — Video Speed Reader" },
-      {
-        name: "description",
-        content: "Sign in or create your Video Speed Reader account to get transcripts fast.",
-      },
-      { property: "og:title", content: "Sign in — Video Speed Reader" },
-      {
-        property: "og:description",
-        content: "Sign in or create your Video Speed Reader account.",
-      },
-    ],
-  }),
-  component: AuthPage,
-});
+type AuthMode = "signin" | "signup";
 
-function AuthPage() {
+export function AuthPage({ mode }: { mode: AuthMode }) {
+  useDocumentMeta({
+    title: "Sign in — Video Speed Reader",
+    description: "Sign in or create your Video Speed Reader account to get transcripts fast.",
+    ogTitle: "Sign in — Video Speed Reader",
+    ogDescription: "Sign in or create your Video Speed Reader account.",
+  });
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const setMode = (next: AuthMode) =>
+    navigate(next === "signin" ? "/sign-in" : "/sign-up", { replace: true });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +22,7 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/app", replace: true });
+      if (data.session) navigate("/app", { replace: true });
     });
   }, [navigate]);
 
@@ -55,7 +47,7 @@ function AuthPage() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       }
-      navigate({ to: "/app", replace: true });
+      navigate("/app", { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {

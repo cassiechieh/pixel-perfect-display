@@ -1,32 +1,26 @@
-import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useDocumentMeta } from "@/hooks/use-document-meta";
+import type { AuthContext } from "./RequireAuth";
 
-export const Route = createFileRoute("/_authenticated/app")({
-  head: () => ({
-    meta: [
-      { title: "Dashboard — Video Speed Reader" },
-      { name: "description", content: "Your Video Speed Reader dashboard." },
-      { property: "og:title", content: "Dashboard — Video Speed Reader" },
-      { property: "og:description", content: "Your Video Speed Reader dashboard." },
-      { name: "robots", content: "noindex" },
-    ],
-  }),
-  component: AppShell,
-});
-
-function AppShell() {
-  const { user } = Route.useRouteContext();
+export function AppShell() {
+  useDocumentMeta({
+    title: "Dashboard — Video Speed Reader",
+    description: "Your Video Speed Reader dashboard.",
+    ogTitle: "Dashboard — Video Speed Reader",
+    ogDescription: "Your Video Speed Reader dashboard.",
+    robots: "noindex",
+  });
+  const { user } = useOutletContext<AuthContext>();
   const navigate = useNavigate();
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   async function handleSignOut() {
     await queryClient.cancelQueries();
     queryClient.clear();
     await supabase.auth.signOut();
-    await router.invalidate();
-    navigate({ to: "/auth", replace: true });
+    navigate("/sign-in", { replace: true });
   }
 
   return (

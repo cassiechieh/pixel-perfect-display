@@ -1,25 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Video Speed Reader — Transcripts in three minutes" },
-      {
-        name: "description",
-        content:
-          "Upload your video and get an accurate Chinese or English transcript in three minutes. Built for creators, educators, and engineers.",
-      },
-      { property: "og:title", content: "Video Speed Reader — Transcripts in three minutes" },
-      {
-        property: "og:description",
-        content: "Upload your video, get a clean transcript in three minutes.",
-      },
-    ],
-  }),
-  component: Landing,
-});
+import { useDocumentMeta } from "@/hooks/use-document-meta";
 
 const features = [
   {
@@ -39,7 +21,14 @@ const features = [
   },
 ];
 
-function Landing() {
+export function Landing() {
+  useDocumentMeta({
+    title: "Video Speed Reader — Transcripts in three minutes",
+    description:
+      "Upload your video and get an accurate Chinese or English transcript in three minutes. Built for creators, educators, and engineers.",
+    ogTitle: "Video Speed Reader — Transcripts in three minutes",
+    ogDescription: "Upload your video, get a clean transcript in three minutes.",
+  });
   const [signedIn, setSignedIn] = useState(false);
 
   useEffect(() => {
@@ -57,7 +46,7 @@ function Landing() {
           Video Speed Reader
         </span>
         <Link
-          to={signedIn ? "/app" : "/auth"}
+          to={signedIn ? "/app" : "/sign-in"}
           className="btn-primary inline-flex items-center rounded-lg px-4 py-2 text-sm font-semibold"
         >
           {signedIn ? "Open app" : "Sign in / 登入"}
@@ -81,7 +70,7 @@ function Landing() {
             </p>
             <div className="mt-10">
               <Link
-                to={signedIn ? "/app" : "/auth"}
+                to={signedIn ? "/app" : "/sign-in"}
                 className="btn-primary inline-flex items-center rounded-xl px-7 py-3.5 text-base font-semibold"
               >
                 {signedIn ? "Go to your dashboard" : "Sign in / 登入"}

@@ -5,8 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Video Speed Reader design system — dark, near-black surfaces with a
- * violet accent. All colors are oklch tokens; never hardcode colors in JSX.
+ * Video Speed Reader design system — "Space Glow": deep navy surfaces,
+ * a warm orange primary accent, and a signature cyan glow-line motif.
+ * All colors are oklch tokens; never hardcode colors in JSX.
  */
 
 @theme inline {
@@ -31,6 +32,7 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-cyan: var(--accent-cyan);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -41,33 +43,42 @@
 
 :root {
   --radius: 0.75rem;
-  --background: oklch(0.145 0.015 285);
-  --foreground: oklch(0.97 0.005 285);
-  --card: oklch(0.19 0.018 285);
-  --card-foreground: oklch(0.97 0.005 285);
-  --popover: oklch(0.19 0.018 285);
-  --popover-foreground: oklch(0.97 0.005 285);
-  --primary: oklch(0.62 0.21 295);
-  --primary-foreground: oklch(0.99 0 0);
-  --primary-glow: oklch(0.72 0.17 310);
-  --secondary: oklch(0.24 0.02 285);
-  --secondary-foreground: oklch(0.97 0.005 285);
-  --muted: oklch(0.24 0.02 285);
-  --muted-foreground: oklch(0.68 0.015 285);
-  --accent: oklch(0.3 0.06 295);
-  --accent-foreground: oklch(0.97 0.005 285);
-  --destructive: oklch(0.62 0.21 25);
+  --background: oklch(0.149 0.022 259.6); /* #060B14 */
+  --foreground: oklch(0.958 0.015 251.2); /* #EAF2FB */
+  --card: oklch(0.2 0.035 261.4); /* #0D1626 */
+  --card-foreground: oklch(0.958 0.015 251.2);
+  --popover: oklch(0.2 0.035 261.4);
+  --popover-foreground: oklch(0.958 0.015 251.2);
+  --primary: oklch(0.705 0.187 47.6); /* #F97316 warm orange */
+  --primary-foreground: oklch(0.181 0.031 247.1); /* #06131F */
+  --primary-glow: oklch(0.837 0.117 66.3); /* #FDBA74 */
+  --secondary: oklch(0.251 0.05 265); /* #16213A */
+  --secondary-foreground: oklch(0.958 0.015 251.2);
+  --muted: oklch(0.251 0.05 265);
+  --muted-foreground: oklch(0.71 0.047 256.8); /* #8FA3BF */
+  --accent: oklch(0.271 0.045 261.4); /* subtle hover surface */
+  --accent-foreground: oklch(0.958 0.015 251.2);
+  --accent-cyan: oklch(0.754 0.139 232.7); /* #38BDF8 — signature glow line */
+  --destructive: oklch(0.719 0.169 13.4); /* #FB7185 */
   --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(1 0 0 / 10%);
+  --border: oklch(0.309 0.049 261.5); /* #223049 */
   --input: oklch(1 0 0 / 14%);
-  --ring: oklch(0.62 0.21 295);
+  --ring: oklch(0.705 0.187 47.6);
   --gradient-hero: radial-gradient(
       60% 60% at 50% 0%,
-      color-mix(in oklab, var(--primary) 30%, transparent),
+      color-mix(in oklab, var(--primary) 24%, transparent),
       transparent 70%
     );
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
   --shadow-glow: 0 20px 60px -20px color-mix(in oklab, var(--primary) 55%, transparent);
+  --glow-line: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent-cyan) 20%,
+    color-mix(in oklab, var(--accent-cyan) 40%, white) 50%,
+    var(--accent-cyan) 80%,
+    transparent
+  );
 }
 
 @layer base {
@@ -113,6 +124,32 @@
   &:hover {
     border-color: color-mix(in oklab, var(--primary) 45%, transparent);
     transform: translateY(-3px);
+  }
+}
+
+/* Signature "space glow" divider — a thin line of light. */
+@utility glow-line {
+  display: block;
+  height: 2px;
+  width: 100%;
+  border-radius: 999px;
+  background-image: var(--glow-line);
+  box-shadow: 0 0 24px 2px color-mix(in oklab, var(--accent-cyan) 55%, transparent);
+}
+
+/* Thin glow strip along the top edge of a card, echoing the glow-line. */
+@utility card-glow-top {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-image: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+    box-shadow: 0 0 12px color-mix(in oklab, var(--accent-cyan) 50%, transparent);
   }
 }
 

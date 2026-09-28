@@ -41,6 +41,7 @@ export function Landing() {
 
   return (
     <div className="min-h-screen bg-background">
+      <div className="glow-line" />
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <span className="text-sm font-semibold tracking-tight sm:text-base">
           Video Speed Reader
@@ -84,7 +85,7 @@ export function Landing() {
             {features.map((f, i) => (
               <article
                 key={f.subtitle}
-                className="card-surface animate-rise rounded-2xl p-7"
+                className="card-surface card-glow-top animate-rise overflow-hidden rounded-2xl p-7"
                 style={{ animationDelay: `${i * 110}ms` }}
               >
                 <h2 className="text-lg font-semibold">{f.title}</h2>
